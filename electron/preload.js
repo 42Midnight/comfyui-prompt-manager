@@ -21,6 +21,16 @@ contextBridge.exposeInMainWorld('electronAPI', {
   deleteFiles: (imageFileName, jsonFileName) => {
     console.log('调用 deleteFiles:', imageFileName, jsonFileName);
     return ipcRenderer.invoke('delete-files', imageFileName, jsonFileName);
+  },
+  // 读取作品数据
+  readWorks: () => {
+    console.log('调用 readWorks');
+    return ipcRenderer.invoke('read-works');
+  },
+  // 读取单个作品详情
+  readWorkDetail: (fileName) => {
+    console.log('调用 readWorkDetail:', fileName);
+    return ipcRenderer.invoke('read-work-detail', fileName);
   }
 });
 

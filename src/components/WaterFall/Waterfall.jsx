@@ -1,55 +1,24 @@
 // 瀑布流组件
-// 功能：展示图片卡片，支持批量选择和删除
+// 功能：展示图片卡片，支持批量选择和删除，实现响应式布局
 
 import './Waterfall.css';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-// 自动导入所有图片文件
-const imageModules = import.meta.glob('../../../image/*.{jpg,png,jpeg}', { eager: true, import: 'default' });
-// 自动导入所有 JSON 数据文件
-const jsonModules = import.meta.glob('../../../data/*.json', { eager: true, import: 'default' });
-
-// 构建 JSON 数据映射，方便通过文件名快速查找
-const jsonDataMap = {};
-Object.entries(jsonModules).forEach(([jsonPath, jsonData]) => {
-  const fileName = jsonPath.replace('../../../data/', '').replace('.json', '');
-  jsonDataMap[fileName] = jsonData;
-});
-
-// 处理图片数据，提取时间戳并排序
-const works = Object.entries(imageModules).map(([imagePath, cover], index) => {
-  const fileNameWithExt = imagePath.replace('../../../image/', '');
-  const fileName = fileNameWithExt.replace(/\.(jpg|png|jpeg)$/, '');
-  const jsonData = jsonDataMap[fileName] || {};
-  
-  // 从文件名中提取时间戳（格式：filename_timestamp）
-  let timestamp = 0;
-  const match = fileName.match(/_\d+$/);
-  if (match) {
-    timestamp = parseInt(match[0].replace('_', ''));
-  }
-  
-  return {
-    title: jsonData.title || fileName,  // 标题（从 JSON 读取或使用文件名）
-    cover: cover,                        // 图片路径
-    fileName: fileNameWithExt,           // 带扩展名的文件名
-    timestamp: timestamp                 // 时间戳（用于排序）
-  };
-})
-// 按时间戳倒序排序，最新的在前面
-.sort((a, b) => b.timestamp - a.timestamp)
-// 重新分配 ID
-.map((work, index) => ({
-  ...work,
-  id: index + 1
-}));
-
+/**
+ * 瀑布流组件
+ * 功能：
+ * 1. 展示图片卡片，实现瀑布流布局
+ * 2. 支持批量选择和删除作品
+ * 3. 响应式设计，根据屏幕宽度调整列数
+ * 4. 通过 Electron API 动态读取文件系统中的作品数据
+ */
 export default function WaterFall() {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // 路由导航
   const containerRef = useRef(null);  // 瀑布流容器引用
   
   // 状态管理
+  const [works, setWorks] = useState([]);              // 作品数据
   const [columns, setColumns] = useState([]);          // 列高数组
   const [columnCount, setColumnCount] = useState(6);   // 列数
   const [cardPositions, setCardPositions] = useState({});  // 卡片位置
@@ -57,6 +26,75 @@ export default function WaterFall() {
   const [selectedWorks, setSelectedWorks] = useState([]);  // 选中的作品
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);  // 删除确认弹窗
   const [isDeleting, setIsDeleting] = useState(false);  // 删除中状态
+  const [isLoading, setIsLoading] = useState(true);    // 加载中状态
+  
+  // 加载作品数据
+  const loadWorks = async () => {
+    try {
+      if (window.electronAPI) {
+        // 打包后：通过 Electron API 读取文件
+        console.log('加载作品数据...');
+        const result = await window.electronAPI.readWorks();
+        console.log('readWorks 结果:', result);
+        
+        if (result.success) {
+          setWorks(result.works);
+        } else {
+          console.error('读取作品数据失败:', result.error);
+          setWorks([]);
+        }
+      } else {
+        // 开发模式：使用静态导入
+        const imageModules = import.meta.glob('../../../image/*.{jpg,png,jpeg}', { eager: true, import: 'default' });
+        const jsonModules = import.meta.glob('../../../data/*.json', { eager: true, import: 'default' });
+        
+        // 构建 JSON 数据映射
+        const jsonDataMap = {};
+        Object.entries(jsonModules).forEach(([jsonPath, jsonData]) => {
+          const fileName = jsonPath.replace('../../../data/', '').replace('.json', '');
+          jsonDataMap[fileName] = jsonData;
+        });
+        
+        // 处理图片数据
+        const loadedWorks = Object.entries(imageModules).map(([imagePath, cover], index) => {
+          const fileNameWithExt = imagePath.replace('../../../image/', '');
+          const fileName = fileNameWithExt.replace(/\.(jpg|png|jpeg)$/, '');
+          const jsonData = jsonDataMap[fileName] || {};
+          
+          // 从文件名中提取时间戳
+          let timestamp = 0;
+          const match = fileName.match(/_\d+$/);
+          if (match) {
+            timestamp = parseInt(match[0].replace('_', ''));
+          }
+          
+          return {
+            title: jsonData.title || fileName,
+            cover: cover,
+            fileName: fileNameWithExt,
+            timestamp: timestamp
+          };
+        })
+        .sort((a, b) => b.timestamp - a.timestamp)
+        .map((work, index) => ({
+          ...work,
+          id: index + 1
+        }));
+        
+        setWorks(loadedWorks);
+      }
+    } catch (error) {
+      console.error('加载作品数据失败:', error);
+      setWorks([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  // 组件挂载时加载数据
+  useEffect(() => {
+    loadWorks();
+  }, []);
   
   // 处理卡片点击
   // 批量模式下：切换选中状态
@@ -122,17 +160,19 @@ export default function WaterFall() {
         
         // 调用 Electron API 删除文件
         if (window.electronAPI) {
-          await window.electronAPI.deleteFiles(imageFileName, jsonFileName);
+          const result = await window.electronAPI.deleteFiles(imageFileName, jsonFileName);
+          console.log('删除文件结果:', result);
         } else {
           console.log('开发环境：模拟删除文件', imageFileName, jsonFileName);
         }
       }
       
-      // 重置状态并刷新页面
+      // 重置状态并重新加载数据
       setShowDeleteConfirm(false);
       setIsBatchMode(false);
       setSelectedWorks([]);
-      window.location.reload();
+      // 重新加载作品数据
+      await loadWorks();
     } catch (error) {
       console.error('删除失败:', error);
       alert('删除失败：' + error.message);

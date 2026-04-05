@@ -5,30 +5,14 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import './Detail.css';
 
-// 使用 Vite 的 import.meta.glob API 自动加载 image 文件夹中的所有图片
-const imageModules = import.meta.glob('../../../image/*.{jpg,png,jpeg}', { eager: true, import: 'default' });
-
-// 使用 Vite 的 import.meta.glob API 自动加载 data 文件夹中的所有 JSON 文件
-const jsonModules = import.meta.glob('../../../data/*.json', { eager: true, import: 'default' });
-
-// 创建文件名到 JSON 数据的映射
-const jsonDataMap = {};
-Object.entries(jsonModules).forEach(([jsonPath, jsonData]) => {
-  const fileName = jsonPath.replace('../../../data/', '').replace('.json', '');
-  jsonDataMap[fileName] = jsonData;
-});
-
-// 创建文件名到图片 URL 的映射
-const imageDataMap = {};
-Object.entries(imageModules).forEach(([imagePath, imageUrl]) => {
-  const fileNameWithExt = imagePath.replace('../../../image/', '');
-  const fileName = fileNameWithExt.replace(/\.(jpg|png|jpeg)$/, '');
-  imageDataMap[fileName] = {
-    url: imageUrl,
-    fileName: fileNameWithExt
-  };
-});
-
+/**
+ * 图片详情页组件
+ * 功能：
+ * 1. 显示图片详情和标题
+ * 2. 展示 Prompt 信息，支持复制单个字段或全部字段
+ * 3. 支持删除作品功能
+ * 4. 通过 Electron API 动态读取作品详情
+ */
 export default function Detail() {
   const { fileName } = useParams();  // 获取 URL 参数中的文件名
   const navigate = useNavigate();  // 路由导航
@@ -40,33 +24,94 @@ export default function Detail() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);  // 删除确认弹窗
   const [isDeleting, setIsDeleting] = useState(false);  // 删除中状态
   
-  // 根据文件名加载图片数据
+  /**
+   * 根据文件名加载图片数据
+   * 打包后通过 Electron API 读取，开发模式使用静态导入
+   */
   useEffect(() => {
-    if (!fileName) return;
-    
-    const decodedFileName = decodeURIComponent(fileName);
-    const fileNameWithoutExt = decodedFileName.replace(/\.(jpg|png|jpeg)$/, '');
-    
-    if (imageDataMap[fileNameWithoutExt]) {
-      const imageData = imageDataMap[fileNameWithoutExt];
-      const jsonData = jsonDataMap[fileNameWithoutExt] || {};
+    const loadWorkData = async () => {
+      if (!fileName) return;
       
-      setWorkData({
-        id: fileNameWithoutExt,
-        title: jsonData.title || fileNameWithoutExt,
-        cover: imageData.url,
-        fileName: imageData.fileName,
-        prompt: jsonData.prompt || null  // 读取 prompt 数据
-      });
-    }
-  }, [fileName]);
+      try {
+        if (window.electronAPI) {
+          // 打包后：通过 Electron API 读取文件
+          console.log('加载作品详情:', fileName);
+          const result = await window.electronAPI.readWorkDetail(fileName);
+          console.log('readWorkDetail 结果:', result);
+          
+          if (result.success) {
+            setWorkData(result.workData);
+          } else {
+            console.error('读取作品详情失败:', result.error);
+            // 显示错误信息
+            alert('加载作品详情失败: ' + result.error);
+            navigate('/');
+          }
+        } else {
+          // 开发模式：使用静态导入
+          const imageModules = import.meta.glob('../../../image/*.{jpg,png,jpeg}', { eager: true, import: 'default' });
+          const jsonModules = import.meta.glob('../../../data/*.json', { eager: true, import: 'default' });
+          
+          // 创建文件名到 JSON 数据的映射
+          const jsonDataMap = {};
+          Object.entries(jsonModules).forEach(([jsonPath, jsonData]) => {
+            const fileName = jsonPath.replace('../../../data/', '').replace('.json', '');
+            jsonDataMap[fileName] = jsonData;
+          });
+          
+          // 创建文件名到图片 URL 的映射
+          const imageDataMap = {};
+          Object.entries(imageModules).forEach(([imagePath, imageUrl]) => {
+            const fileNameWithExt = imagePath.replace('../../../image/', '');
+            const fileName = fileNameWithExt.replace(/\.(jpg|png|jpeg)$/, '');
+            imageDataMap[fileName] = {
+              url: imageUrl,
+              fileName: fileNameWithExt
+            };
+          });
+          
+          const decodedFileName = decodeURIComponent(fileName);
+          const fileNameWithoutExt = decodedFileName.replace(/\.(jpg|png|jpeg)$/, '');
+          
+          if (imageDataMap[fileNameWithoutExt]) {
+            const imageData = imageDataMap[fileNameWithoutExt];
+            const jsonData = jsonDataMap[fileNameWithoutExt] || {};
+            
+            setWorkData({
+              id: fileNameWithoutExt,
+              title: jsonData.title || fileNameWithoutExt,
+              cover: imageData.url,
+              fileName: imageData.fileName,
+              prompt: jsonData.prompt || null  // 读取 prompt 数据
+            });
+          } else {
+            console.error('图片文件不存在:', fileName);
+            alert('图片文件不存在');
+            navigate('/');
+          }
+        }
+      } catch (error) {
+        console.error('加载作品详情失败:', error);
+        alert('加载作品详情失败: ' + error.message);
+        navigate('/');
+      }
+    };
+    
+    loadWorkData();
+  }, [fileName, navigate]);
   
-  // 返回瀑布流页面
+  /**
+   * 返回瀑布流页面
+   */
   const handleBack = () => {
     navigate('/');
   };
   
-  // 复制文本到剪贴板
+  /**
+   * 复制文本到剪贴板
+   * @param {string} fieldName - 字段名称
+   * @param {string} text - 要复制的文本
+   */
   const handleCopy = async (fieldName, text) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -80,7 +125,9 @@ export default function Detail() {
     }
   };
   
-  // 复制所有字段值
+  /**
+   * 复制所有字段值
+   */
   const handleCopyAll = async () => {
     if (!workData || !workData.prompt) return;
     
@@ -98,17 +145,23 @@ export default function Detail() {
     }
   };
   
-  // 显示删除确认弹窗
+  /**
+   * 显示删除确认弹窗
+   */
   const handleDeleteClick = () => {
     setShowDeleteConfirm(true);
   };
   
-  // 取消删除
+  /**
+   * 取消删除
+   */
   const handleCancelDelete = () => {
     setShowDeleteConfirm(false);
   };
   
-  // 确认删除
+  /**
+   * 确认删除
+   */
   const handleConfirmDelete = async () => {
     if (!workData) return;
     
@@ -119,14 +172,14 @@ export default function Detail() {
       
       // 调用 Electron API 删除文件
       if (window.electronAPI) {
-        await window.electronAPI.deleteFiles(imageFileName, jsonFileName);
+        const result = await window.electronAPI.deleteFiles(imageFileName, jsonFileName);
+        console.log('删除文件结果:', result);
       } else {
         console.log('开发环境：模拟删除文件', imageFileName, jsonFileName);
       }
       
-      // 删除成功，返回瀑布页并刷新
+      // 删除成功，返回瀑布页
       navigate('/');
-      window.location.reload();
     } catch (error) {
       console.error('删除失败:', error);
       alert('删除失败：' + error.message);

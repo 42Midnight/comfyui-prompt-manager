@@ -5,6 +5,14 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Upload.css';
 
+/**
+ * 上传页面组件
+ * 功能：
+ * 1. 支持图片上传（点击选择或拖拽上传）
+ * 2. 配置作品标题
+ * 3. 管理 prompt 字段（添加、删除、编辑）
+ * 4. 通过 Electron API 保存文件到本地
+ */
 export default function Upload() {
   const navigate = useNavigate();  // 路由导航
   
@@ -16,7 +24,10 @@ export default function Upload() {
   const [isSaving, setIsSaving] = useState(false);  // 保存中状态
   const [isDragging, setIsDragging] = useState(false);  // 拖拽状态
   
-  // 处理文件（从选择或拖拽）
+  /**
+   * 处理文件（从选择或拖拽）
+   * @param {File} file - 选中的文件
+   */
   const processFile = (file) => {
     if (!file) return;
     
@@ -40,33 +51,48 @@ export default function Upload() {
     reader.readAsDataURL(file);
   };
   
-  // 处理文件选择
+  /**
+   * 处理文件选择
+   * @param {Event} e - 文件选择事件
+   */
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     processFile(file);
   };
   
-  // 拖拽进入
+  /**
+   * 拖拽进入
+   * @param {Event} e - 拖拽事件
+   */
   const handleDragEnter = (e) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(true);
   };
   
-  // 拖拽离开
+  /**
+   * 拖拽离开
+   * @param {Event} e - 拖拽事件
+   */
   const handleDragLeave = (e) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
   };
   
-  // 拖拽悬停
+  /**
+   * 拖拽悬停
+   * @param {Event} e - 拖拽事件
+   */
   const handleDragOver = (e) => {
     e.preventDefault();
     e.stopPropagation();
   };
   
-  // 拖拽放下
+  /**
+   * 拖拽放下
+   * @param {Event} e - 拖拽事件
+   */
   const handleDrop = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -78,26 +104,40 @@ export default function Upload() {
     }
   };
   
-  // 添加新的 prompt 字段
+  /**
+   * 添加新的 prompt 字段
+   */
   const addPromptField = () => {
     setPromptFields([...promptFields, { name: '', value: '' }]);
   };
   
-  // 删除 prompt 字段
+  /**
+   * 删除 prompt 字段
+   * @param {number} index - 字段索引
+   */
   const removePromptField = (index) => {
     if (promptFields.length > 1) {
       setPromptFields(promptFields.filter((_, i) => i !== index));
     }
   };
   
-  // 更新 prompt 字段
+  /**
+   * 更新 prompt 字段
+   * @param {number} index - 字段索引
+   * @param {string} field - 字段名（name 或 value）
+   * @param {string} value - 字段值
+   */
   const updatePromptField = (index, field, value) => {
     const newFields = [...promptFields];
     newFields[index][field] = value;
     setPromptFields(newFields);
   };
   
-  // 生成唯一文件名（原始文件名 + 时间戳后缀）
+  /**
+   * 生成唯一文件名（原始文件名 + 时间戳后缀）
+   * @param {string} originalName - 原始文件名
+   * @returns {string} 唯一文件名
+   */
   const generateFileName = (originalName) => {
     const timestamp = Date.now();
     const ext = originalName.split('.').pop();
@@ -105,7 +145,11 @@ export default function Upload() {
     return `${nameWithoutExt}_${timestamp}.${ext}`;
   };
   
-  // 将图片转换为 Buffer
+  /**
+   * 将图片转换为 Buffer
+   * @param {File} file - 图片文件
+   * @returns {Promise<Uint8Array>} 图片的 Buffer 数组
+   */
   const fileToBuffer = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -119,7 +163,10 @@ export default function Upload() {
     });
   };
   
-  // 处理提交
+  /**
+   * 处理提交
+   * @param {Event} e - 表单提交事件
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -158,9 +205,21 @@ export default function Upload() {
       // 调用 Electron API 保存文件
       if (window.electronAPI) {
         console.log('使用 Electron API 保存文件...');
-        await window.electronAPI.saveImage(fileName, imageBuffer);
-        await window.electronAPI.saveJson(`${jsonFileName}.json`, jsonData);
-        console.log('文件保存成功！');
+        console.log('保存图片文件名:', fileName);
+        console.log('保存 JSON 文件名:', `${jsonFileName}.json`);
+        
+        try {
+          const saveImageResult = await window.electronAPI.saveImage(fileName, imageBuffer);
+          console.log('saveImage 结果:', saveImageResult);
+          
+          const saveJsonResult = await window.electronAPI.saveJson(`${jsonFileName}.json`, jsonData);
+          console.log('saveJson 结果:', saveJsonResult);
+          
+          console.log('文件保存成功！');
+        } catch (error) {
+          console.error('保存文件时出错:', error);
+          throw error;
+        }
       } else {
         // 开发环境模拟（仅输出日志，不保存文件）
         console.log('开发环境：文件不会真正保存');
@@ -168,9 +227,9 @@ export default function Upload() {
         console.log('保存 JSON:', `${jsonFileName}.json`, jsonData);
       }
       
-      // 跳回瀑布页，刷新页面以显示新图片
+      // 跳回瀑布页
       navigate('/');
-      window.location.reload();
+      // 不需要刷新页面，WaterFall组件会在挂载时加载数据
       
     } catch (error) {
       console.error('保存失败:', error);
@@ -180,7 +239,9 @@ export default function Upload() {
     }
   };
   
-  // 返回瀑布页
+  /**
+   * 返回瀑布页
+   */
   const handleCancel = () => {
     navigate('/');
   };
@@ -221,7 +282,6 @@ export default function Upload() {
                         setImagePreview(null);
                       }}
                     >
-                      ×
                     </button>
                   </div>
                 ) : (

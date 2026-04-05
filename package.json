@@ -1,98 +1,98 @@
 {
-  "name": "comfyui-prompt-manager",
-  "productName": "ComfyUI Prompt Manager",
-  "version": "1.0.0",
-  "main": "electron/main.js",
-  "type": "module",
-  "description": "ComfyUI Prompt 管理器，用于管理和组织 AI 绘画提示词",
-  "license": "MIT",
+  "name": "comfyui-prompt-manager", // 项目名称
+  "productName": "ComfyUI Prompt Manager", // 应用显示名称
+  "version": "1.0.0", // 版本号
+  "main": "electron/main.js", // Electron 主进程入口文件
+  "type": "module", // 模块类型
+  "description": "ComfyUI Prompt 管理器，用于管理和组织 AI 绘画提示词", // 项目描述
+  "license": "MIT", // 许可证
   "repository": {
-    "type": "git",
-    "url": "https://github.com/42Midnight/comfyui-prompt-manager.git"
+    "type": "git", // 版本控制类型
+    "url": "https://github.com/42Midnight/comfyui-prompt-manager.git" // 仓库地址
   },
-  "homepage": "https://github.com/42Midnight/comfyui-prompt-manager",
+  "homepage": "https://github.com/42Midnight/comfyui-prompt-manager", // 项目主页
   "author": {
-    "name": "42Midnight",
-    "email": "midnight42d@qq.com",
-    "url": "https://github.com/42Midnight"
+    "name": "42Midnight", // 作者名称
+    "email": "midnight42d@qq.com", // 作者邮箱
+    "url": "https://github.com/42Midnight" // 作者 GitHub
   },
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview",
-    "electron": "electron .",
-    "start": "concurrently --kill-others --success first \"vite\" \"electron .\"",
-    "dist": "vite build && electron-builder",
-    "pack": "electron-builder --dir",
-    "dist:win": "electron-builder --win",
-   "dist:mac": "electron-builder --mac"
+    "dev": "vite", // 启动 Vite 开发服务器
+    "build": "vite build", // 构建生产版本
+    "lint": "eslint .", // 代码 lint 检查
+    "preview": "vite preview", // 预览生产构建
+    "electron": "electron .", // 启动 Electron
+    "start": "concurrently --kill-others --success first \"vite\" \"electron .\"", // 启动开发模式（同时运行 Vite 和 Electron）
+    "dist": "vite build && electron-builder", // 构建并打包
+    "pack": "electron-builder --dir", // 打包到目录
+    "dist:win": "electron-builder --win", // 打包 Windows 版本
+    "dist:mac": "electron-builder --mac" // 打包 macOS 版本
   },
   "build": {
-    "appId": "io.github.42Midnight.comfyui-prompt-manager",
-  "mac": {
-    "category": "public.app-category.productivity",
-    "target": [
-      {
-        "target": "dmg",
-        "arch": ["x64", "arm64"]
-      }
-    ],
-    "icon": "build/icon.icns",
-    "artifactName": "${productName}-${version}-${arch}.${ext}"
-  },
-  "win": {
-    "target": [
-      {
-        "target": "nsis",
-        "arch": ["x64"]
-      }
-    ],
-    "icon": "build/icon.ico",
-    "artifactName": "${productName}-${version}-${arch}-setup.${ext}"
-  },
-  "nsis": {
-    "oneClick": false,
-    "perMachine": true,
-    "allowToChangeInstallationDirectory": true,
-    "createDesktopShortcut": true,
-    "createStartMenuShortcut": true,
-    "shortcutName": "ComfyUI Prompt Manager"
-  },
+    "appId": "io.github.42Midnight.comfyui-prompt-manager", // 应用 ID
+    "mac": {
+      "category": "public.app-category.productivity", // macOS 应用类别
+      "target": [
+        {
+          "target": "dmg", // DMG 格式
+          "arch": ["x64", "arm64"] // 支持的架构
+        }
+      ],
+      "icon": "build/icon.icns", // macOS 图标
+      "artifactName": "${productName}-${version}-${arch}.${ext}" // 构建产物名称
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis", // NSIS 安装包
+          "arch": ["x64"] // 64位架构
+        }
+      ],
+      "icon": "build/icon.ico", // Windows 图标
+      "artifactName": "${productName}-${version}-${arch}-setup.${ext}" // 构建产物名称
+    },
+    "nsis": {
+      "oneClick": false, // 非一键安装
+      "perMachine": true, // 每台机器安装
+      "allowToChangeInstallationDirectory": true, // 允许修改安装目录
+      "createDesktopShortcut": true, // 创建桌面快捷方式
+      "createStartMenuShortcut": true, // 创建开始菜单快捷方式
+      "shortcutName": "ComfyUI Prompt Manager" // 快捷方式名称
+    },
     "directories": {
-      "output": "release"
+      "output": "release" // 输出目录
     }
   },
   "dependencies": {
-    "electron": "^41.1.1",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
-    "react-router-dom": "^7.14.0"
+    "react": "^19.2.4", // React 核心库
+    "react-dom": "^19.2.4", // React DOM 渲染器
+    "react-router-dom": "^7.14.0" // React 路由库
   },
   "devDependencies": {
-    "@babel/core": "^7.29.0",
-    "@eslint/js": "^9.39.4",
-    "@rolldown/plugin-babel": "^0.2.1",
-    "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.1",
-    "babel-plugin-react-compiler": "^1.0.0",
-    "concurrently": "^9.2.1",
-    "electron-builder": "^26.8.1",
-    "eslint": "^9.39.4",
-    "eslint-plugin-react-hooks": "^7.0.1",
-    "eslint-plugin-react-refresh": "^0.5.2",
-    "globals": "^17.4.0",
-    "vite": "^8.0.1"
+    "@babel/core": "^7.29.0", // Babel 核心
+    "@eslint/js": "^9.39.4", // ESLint 核心
+    "@rolldown/plugin-babel": "^0.2.1", // RollDown Babel 插件
+    "@types/react": "^19.2.14", // React 类型定义
+    "@types/react-dom": "^19.2.3", // React DOM 类型定义
+    "@vitejs/plugin-react": "^6.0.1", // Vite React 插件
+    "babel-plugin-react-compiler": "^1.0.0", // React 编译器 Babel 插件
+    "concurrently": "^9.2.1", // 同时运行多个命令
+    "electron": "^41.1.1", // Electron 框架
+    "electron-builder": "^26.8.1", // Electron 打包工具
+    "eslint": "^9.39.4", // ESLint 代码检查工具
+    "eslint-plugin-react-hooks": "^7.0.1", // React Hooks ESLint 插件
+    "eslint-plugin-react-refresh": "^0.5.2", // React 热更新 ESLint 插件
+    "globals": "^17.4.0", // 全局变量定义
+    "vite": "^8.0.1" // Vite 构建工具
   },
   "bugs": {
-    "url": "https://github.com/42Midnight/comfyui-prompt-manager/issues"
+    "url": "https://github.com/42Midnight/comfyui-prompt-manager/issues" // Bug 报告地址
   },
   "keywords": [
-    "comfyui",
-    "prompt",
-    "manager",
-    "stable-diffusion",
-    "electron"
+    "comfyui", // 关键词
+    "prompt", // 提示词
+    "manager", // 管理器
+    "stable-diffusion", // 稳定扩散
+    "electron" // Electron
   ]
 }
