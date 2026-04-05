@@ -1,7 +1,11 @@
 # ComfyUI Prompt Manager
 
 ## 项目简介
-ComfyUI Prompt Manager 是一个基于 React + Electron 开发的桌面应用，用于管理和组织 AI 生成的图片作品及其对应的 Prompt 信息。
+ComfyUI Prompt Manager 是一个基于 React + Electron 开发的本地桌面应用，用于管理和组织ComfyUI等AI生成的图片作品及其对应的提示词信息。方便学习和管理提示词。
+虽然该项目一开始为ComfyUI的使用场景而设计，但该项目的使用场景不局限于管理ComfyUI相关的提示词，实际上可以作为通用的提示词管理工具。
+
+## 使用平台说明
+目前本仓库只提供Windows操作系统的安装包。想要在其他操作系统上使用，可以自己配置打包到其他操作系统。
 
 ## 功能特性
 - 🖼️ **瀑布流展示**：响应式瀑布流布局，根据屏幕宽度自动调整列数
@@ -19,6 +23,10 @@ ComfyUI Prompt Manager 是一个基于 React + Electron 开发的桌面应用，
 - **样式**：CSS3
 
 ## 安装和运行
+
+### 发布页下载链接
+
+[Windows](https://github.com/42Midnight/comfyui-prompt-manager/releases/latest)
 
 ### 安装依赖
 ```bash
@@ -95,7 +103,12 @@ comfyui-prompt-manager/
 # ComfyUI Prompt Manager
 
 ## Project Introduction
-ComfyUI Prompt Manager is a desktop application developed based on React + Electron, used for managing and organizing AI-generated image works and their corresponding Prompt information.
+ComfyUI Prompt Manager is a local desktop application built with React and Electron for managing and organizing AI-generated images and their corresponding prompts, especially for ComfyUI. It helps users efficiently study and manage prompt engineering workflows.
+Although designed for ComfyUI, it is not limited to that scenario and can be used as a universal prompt manager for various AI generation tools.
+
+## Platform Usage Instructions
+Currently, this repository only provides installation packages for the Windows operating system.
+If you wish to use it on other operating systems, you can configure and package it for those platforms yourself.
 
 ## Features
 - 🖼️ **Waterfall Layout**：Responsive waterfall layout that automatically adjusts the number of columns based on screen width
@@ -113,6 +126,11 @@ ComfyUI Prompt Manager is a desktop application developed based on React + Elect
 - **Styling**：CSS3
 
 ## Installation and Running
+
+
+### Download from Releases
+
+[Windows](https://github.com/42Midnight/comfyui-prompt-manager/releases/latest)
 
 ### Install Dependencies
 ```bash
