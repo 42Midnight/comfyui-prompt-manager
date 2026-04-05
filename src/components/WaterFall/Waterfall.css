@@ -1,0 +1,367 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.waterfall-page {
+  min-height: 100vh;
+  background-color: #121212;
+}
+
+.top-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background-color: #1a1a1a;
+  border-bottom: 1px solid #333;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  z-index: 100;
+}
+
+.navbar-brand {
+  font-size: 20px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.navbar-batch-btn {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.navbar-batch-btn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.navbar-cancel-btn {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.navbar-cancel-btn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.navbar-delete-btn {
+  background-color: #f44336;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.navbar-delete-btn:hover:not(:disabled) {
+  background-color: #d32f2f;
+}
+
+.navbar-delete-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.selected-count {
+  color: #fff;
+  font-size: 14px;
+  margin-right: 8px;
+}
+
+.navbar-add-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.navbar-add-btn:hover {
+  background-color: #43a047;
+}
+
+.navbar-add-btn .add-icon {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.waterfall-container {
+  max-width: 1600px;
+  margin: 70px auto 0 auto;
+  padding: 20px;
+  position: relative;
+}
+
+.work-card {
+  position: absolute;
+  background-color: transparent;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.work-card:hover:not(.batch-mode) {
+  transform: translateY(-4px);
+}
+
+.work-card.batch-mode {
+  cursor: default;
+}
+
+.work-card.batch-mode:hover {
+  transform: none;
+}
+
+.select-checkbox {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+  cursor: pointer;
+}
+
+.checkbox-inner {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.checkbox-inner.checked {
+  background-color: #4caf50;
+  border-color: #4caf50;
+}
+
+.checkmark {
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.work-cover {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.work-cover.selected {
+  outline: 5px solid #4caf50;
+  outline-offset: -5px;
+}
+
+.work-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.work-info {
+  padding: 12px 0;
+}
+
+.work-title {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+
+.delete-confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.delete-confirm-dialog {
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  padding: 32px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  border: 1px solid #333;
+}
+
+.delete-confirm-title {
+  color: #fff;
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+}
+
+.delete-confirm-message {
+  color: #ccc;
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 0 0 28px 0;
+}
+
+.delete-confirm-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.delete-confirm-cancel {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: none;
+  padding: 10px 28px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.delete-confirm-cancel:hover:not(:disabled) {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.delete-confirm-cancel:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.delete-confirm-ok {
+  background-color: #f44336;
+  color: #fff;
+  border: none;
+  padding: 10px 28px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.delete-confirm-ok:hover:not(:disabled) {
+  background-color: #d32f2f;
+}
+
+.delete-confirm-ok:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 1400px) {
+  .work-card {
+    width: 19.6%;
+    margin: 0 0.2%;
+  }
+}
+
+@media (max-width: 1200px) {
+  .work-card {
+    width: 24.5%;
+    margin: 0 0.25%;
+  }
+}
+
+@media (max-width: 900px) {
+  .work-card {
+    width: 32.666%;
+    margin: 0 0.333%;
+  }
+}
+
+@media (max-width: 600px) {
+  .top-navbar {
+    padding: 0 16px;
+  }
+  
+  .navbar-brand {
+    font-size: 16px;
+  }
+  
+  .navbar-actions {
+    gap: 8px;
+  }
+  
+  .navbar-batch-btn,
+  .navbar-cancel-btn,
+  .navbar-delete-btn,
+  .navbar-add-btn {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+  
+  .selected-count {
+    font-size: 12px;
+  }
+  
+  .waterfall-container {
+    margin-top: 70px;
+    padding: 12px;
+  }
+  
+  .work-card {
+    width: 49%;
+    margin: 0 0.5%;
+  }
+}
+
+@media (max-width: 400px) {
+  .work-card {
+    width: 100%;
+    margin: 0;
+  }
+}

@@ -1,0 +1,6 @@
+html,
+body {
+  background-color: #1f1f1f; /* 你想要的颜色 */
+  margin: 0; /* 去掉默认边距，避免白边 */
+  padding: 0;
+}

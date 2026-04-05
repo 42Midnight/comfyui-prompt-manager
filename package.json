@@ -1,0 +1,98 @@
+{
+  "name": "comfyui-prompt-manager",
+  "productName": "ComfyUI Prompt Manager",
+  "version": "1.0.0",
+  "main": "electron/main.js",
+  "type": "module",
+  "description": "ComfyUI Prompt 管理器，用于管理和组织 AI 绘画提示词",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/42Midnight/comfyui-prompt-manager.git"
+  },
+  "homepage": "https://github.com/42Midnight/comfyui-prompt-manager",
+  "author": {
+    "name": "42Midnight",
+    "email": "midnight42d@qq.com",
+    "url": "https://github.com/42Midnight"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "electron": "electron .",
+    "start": "concurrently --kill-others --success first \"vite\" \"electron .\"",
+    "dist": "vite build && electron-builder",
+    "pack": "electron-builder --dir",
+    "dist:win": "electron-builder --win",
+   "dist:mac": "electron-builder --mac"
+  },
+  "build": {
+    "appId": "io.github.42Midnight.comfyui-prompt-manager",
+  "mac": {
+    "category": "public.app-category.productivity",
+    "target": [
+      {
+        "target": "dmg",
+        "arch": ["x64", "arm64"]
+      }
+    ],
+    "icon": "build/icon.icns",
+    "artifactName": "${productName}-${version}-${arch}.${ext}"
+  },
+  "win": {
+    "target": [
+      {
+        "target": "nsis",
+        "arch": ["x64"]
+      }
+    ],
+    "icon": "build/icon.ico",
+    "artifactName": "${productName}-${version}-${arch}-setup.${ext}"
+  },
+  "nsis": {
+    "oneClick": false,
+    "perMachine": true,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "shortcutName": "ComfyUI Prompt Manager"
+  },
+    "directories": {
+      "output": "release"
+    }
+  },
+  "dependencies": {
+    "electron": "^41.1.1",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-router-dom": "^7.14.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.29.0",
+    "@eslint/js": "^9.39.4",
+    "@rolldown/plugin-babel": "^0.2.1",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "babel-plugin-react-compiler": "^1.0.0",
+    "concurrently": "^9.2.1",
+    "electron-builder": "^26.8.1",
+    "eslint": "^9.39.4",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "globals": "^17.4.0",
+    "vite": "^8.0.1"
+  },
+  "bugs": {
+    "url": "https://github.com/42Midnight/comfyui-prompt-manager/issues"
+  },
+  "keywords": [
+    "comfyui",
+    "prompt",
+    "manager",
+    "stable-diffusion",
+    "electron"
+  ]
+}
