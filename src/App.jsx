@@ -5,6 +5,7 @@ import { HashRouter as Router, Routes, Route } from 'react-router-dom' // 导入
 import WaterFall from './components/WaterFall/WaterFall'  // 导入瀑布流首页组件
 import Detail from './components/Detail/Detail'        // 导入图片详情页组件
 import Upload from './components/Upload/Upload'        // 导入上传页面组件
+import Settings from './components/Settings/Settings'  // 导入设置页面组件
 import './index.css'                                   // 导入全局样式
 
 /**
@@ -21,6 +22,8 @@ function App() {
         <Route path="/detail/:fileName" element={<Detail />} />
         {/* 上传页面：添加新作品 */}
         <Route path="/upload" element={<Upload />} />
+        {/* 设置页面：应用设置 */}
+        <Route path="/settings" element={<Settings />} />
       </Routes>
     </Router>
   )

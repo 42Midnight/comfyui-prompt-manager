@@ -45,43 +45,35 @@ export default function WaterFall() {
         }
       } else {
         // 开发模式：使用静态导入
-        const imageModules = import.meta.glob('../../../image/*.{jpg,png,jpeg}', { eager: true, import: 'default' });
-        const jsonModules = import.meta.glob('../../../data/*.json', { eager: true, import: 'default' });
+        // 模拟electron API返回的数据结构
+        const works = [];
         
-        // 构建 JSON 数据映射
-        const jsonDataMap = {};
-        Object.entries(jsonModules).forEach(([jsonPath, jsonData]) => {
-          const fileName = jsonPath.replace('../../../data/', '').replace('.json', '');
-          jsonDataMap[fileName] = jsonData;
+        // 读取所有文件夹
+        const folders = import.meta.glob('../../../image/*', { eager: true });
+        
+        Object.entries(folders).forEach(([folderPath, folder]) => {
+          // 检查是否为目录（在开发模式下，import.meta.glob会返回模块，所以这里需要特殊处理）
+          // 实际上，在开发模式下，我们需要手动构建作品数据
+          // 这里简化处理，只读取根目录下的图片
         });
         
-        // 处理图片数据
-        const loadedWorks = Object.entries(imageModules).map(([imagePath, cover], index) => {
+        // 读取根目录下的图片
+        const imageModules = import.meta.glob('../../../image/*.{jpg,png,jpeg}', { eager: true, import: 'default' });
+        Object.entries(imageModules).forEach(([imagePath, cover], index) => {
           const fileNameWithExt = imagePath.replace('../../../image/', '');
           const fileName = fileNameWithExt.replace(/\.(jpg|png|jpeg)$/, '');
-          const jsonData = jsonDataMap[fileName] || {};
           
-          // 从文件名中提取时间戳
-          let timestamp = 0;
-          const match = fileName.match(/_\d+$/);
-          if (match) {
-            timestamp = parseInt(match[0].replace('_', ''));
-          }
-          
-          return {
-            title: jsonData.title || fileName,
+          works.push({
+            title: fileName,
             cover: cover,
             fileName: fileNameWithExt,
-            timestamp: timestamp
-          };
-        })
-        .sort((a, b) => b.timestamp - a.timestamp)
-        .map((work, index) => ({
-          ...work,
-          id: index + 1
-        }));
+            timestamp: Date.now() - index * 1000,
+            images: [fileNameWithExt],
+            id: index + 1
+          });
+        });
         
-        setWorks(loadedWorks);
+        setWorks(works);
       }
     } catch (error) {
       console.error('加载作品数据失败:', error);
@@ -263,6 +255,10 @@ export default function WaterFall() {
               <button className="navbar-add-btn" onClick={handleAddClick}>
                 <span className="add-icon">+</span>
                 <span className="add-text">添加作品</span>
+              </button>
+              <button className="navbar-settings-btn" onClick={() => navigate('/settings')}>
+                <span className="settings-icon">⚙️</span>
+                <span className="settings-text">设置</span>
               </button>
             </>
           ) : (

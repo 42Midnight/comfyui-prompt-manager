@@ -2,7 +2,7 @@
 .detail-container {
   min-height: 100vh;
   background-color: #121212;
-  padding: 20px;
+  padding: 0;
 }
 
 /* 加载中状态 */
@@ -16,21 +16,107 @@
   font-size: 18px;
 }
 
+/* 顶部导航栏 */
+.detail-navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #1a1a1a;
+  padding: 16px 30px;
+  border-bottom: 1px solid #333;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
 /* 返回按钮 */
 .back-button {
   background-color: rgba(255, 255, 255, 0.1);
   color: #fff;
   border: none;
-  padding: 12px 24px;
+  padding: 10px 20px;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 16px;
-  margin-bottom: 20px;
+  font-size: 14px;
   transition: background-color 0.2s ease;
+  margin: 0;
 }
 
 .back-button:hover {
   background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* 导航栏标题 */
+.navbar-title {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  flex: 1;
+  text-align: center;
+  margin: 0 20px;
+}
+
+/* 导航栏操作区 */
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Prompt 信息文本 */
+.prompt-info-text {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  margin-right: 10px;
+}
+
+/* 复制选中按钮 */
+.copy-selected-button {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  min-width: 120px;
+  text-align: center;
+}
+
+.copy-selected-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* 复制选中成功状态 */
+.copy-selected-button.copied {
+  background-color: #4caf50;
+  color: #fff;
+}
+
+/* 复制全部按钮 */
+.copy-all-button {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  min-width: 120px;
+  text-align: center;
+}
+
+.copy-all-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* 复制全部成功状态 */
+.copy-all-button.copied {
+  background-color: #4caf50;
+  color: #fff;
 }
 
 /* 详情内容区域：左右布局 */
@@ -39,6 +125,7 @@
   gap: 30px;
   max-width: 1600px;
   margin: 0 auto;
+  padding: 30px;
 }
 
 /* 左侧：图片展示区域 */
@@ -47,24 +134,17 @@
   min-width: 0;
 }
 
-/* 图片标题 */
-.detail-title {
-  color: #fff;
-  font-size: 28px;
-  font-weight: 600;
-  margin-bottom: 24px;
-  text-align: center;
-}
-
 /* 图片包装器 */
 .detail-image-wrapper {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: #1a1a1a;
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 24px;
+  position: relative;
 }
 
 /* 详情图片样式 */
@@ -83,7 +163,42 @@
 }
 
 .detail-filename {
-  margin: 0 0 16px 0;
+  margin: 0 0 8px 0;
+}
+
+/* 多张图片容器 */
+.multiple-images-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+/* 图片索引 */
+.image-index {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  margin: 0;
+  z-index: 1;
+}
+
+.image-filename {
+  text-align: center;
+  color: #999;
+  font-size: 12px;
+  margin: 4px 0 8px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  clear: both;
+  display: block;
 }
 
 /* 删除按钮 */
@@ -202,47 +317,6 @@
   max-width: 600px;
 }
 
-/* Prompt 头部 */
-.prompt-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 10px;
-  border-bottom: 2px solid #333;
-}
-
-/* Prompt 标题 */
-.prompt-title {
-  color: #fff;
-  font-size: 24px;
-  font-weight: 600;
-  margin: 0;
-}
-
-/* 复制全部按钮 */
-.copy-all-button {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #fff;
-  border: none;
-  padding: 8px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
-
-.copy-all-button:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-}
-
-/* 复制全部成功状态 */
-.copy-all-button.copied {
-  background-color: #4caf50;
-  color: #fff;
-}
-
 /* Prompt 列表容器 */
 .prompt-list {
   display: flex;
@@ -257,11 +331,17 @@
   padding: 16px;
   position: relative;
   border: 1px solid #333;
-  transition: border-color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .prompt-card:hover {
   border-color: #444;
+}
+
+/* 选中状态的卡片 */
+.prompt-card.selected {
+  border-color: #4caf50;
+  background-color: rgba(76, 175, 80, 0.1);
 }
 
 /* Prompt 卡片头部（字段名称 + 复制按钮） */
@@ -272,13 +352,38 @@
   margin-bottom: 12px;
 }
 
-/* 字段名称 */
+/* 字段头部（复选框 + 字段名） */
+.prompt-field-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+
+/* 为字段名称添加固定的左边距，确保复选框显示时文字位置不变 */
 .prompt-field-name {
   color: #fff;
   font-size: 16px;
   font-weight: 600;
   text-transform: capitalize;
+  margin-left: 26px;
 }
+
+/* 复选框绝对定位，覆盖在字段名称的左边距位置 */
+.field-checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: #4caf50;
+  cursor: pointer;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+
+
+
 
 /* 复制按钮 */
 .copy-button {
@@ -290,6 +395,8 @@
   cursor: pointer;
   font-size: 14px;
   transition: all 0.2s ease;
+  min-width: 80px;
+  text-align: center;
 }
 
 .copy-button:hover {
@@ -339,5 +446,52 @@
   
   .detail-image {
     max-height: 50vh;
+  }
+  
+  /* 导航栏在小屏幕上的调整 */
+  .detail-navbar {
+    padding: 12px 20px;
+  }
+  
+  .navbar-title {
+    font-size: 16px;
+  }
+  
+  .back-button {
+    padding: 8px 16px;
+  }
+  
+  .copy-all-button,
+  .copy-selected-button,
+  .copy-button {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  
+  .prompt-info-text {
+    font-size: 14px;
+  }
+}
+
+/* 响应式布局：超小屏幕 */
+@media (max-width: 600px) {
+  .detail-content {
+    padding: 20px;
+  }
+  
+  .detail-navbar {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  
+  .navbar-title {
+    text-align: left;
+    margin: 0;
+  }
+  
+  .navbar-actions {
+    width: 100%;
+    justify-content: space-between;
   }
 }

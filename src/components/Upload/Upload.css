@@ -139,25 +139,42 @@
   transition: color 0.2s ease;
 }
 
+/* 图片预览容器 */
+.image-previews-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  width: 100%;
+}
+
 /* 图片预览包装器 */
 .image-preview-wrapper {
   position: relative;
-  display: inline-block;
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #333;
+  border-radius: 12px;
+  background-color: #111;
+  overflow: hidden;
 }
 
 /* 图片预览 */
 .image-preview {
   max-width: 100%;
-  max-height: 300px;
-  object-fit: contain;
+  max-height: 100%;
+  object-fit: cover;
   border-radius: 12px;
 }
 
 /* 移除图片按钮 */
 .remove-image-btn {
   position: absolute;
-  top: -10px;
-  right: -10px;
+  top: 10px;
+  right: 10px;
   width: 32px;
   height: 32px;
   background-color: #ff4444;
@@ -171,6 +188,7 @@
   align-items: center;
   justify-content: center;
   transition: background-color 0.2s ease;
+  z-index: 10;
 }
 
 .remove-image-btn:hover {
@@ -379,4 +397,174 @@
   .upload-right {
     width: 100%;
   }
+}
+
+/* 拖拽排序样式 */
+.image-preview-wrapper[draggable='true'] {
+  cursor: grab;
+}
+
+.image-preview-wrapper[draggable='true']:active {
+  cursor: grabbing;
+}
+
+.image-preview-wrapper.dragging {
+  opacity: 0.5;
+  transform: scale(1.05);
+  z-index: 100;
+}
+
+/* 加载模板按钮 */
+.load-template-btn {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
+}
+
+.load-template-btn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Prompt 头部 */
+.prompt-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* 模板选择对话框遮罩层 */
+.template-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* 模板选择对话框 */
+.template-modal {
+  background-color: #1a1a1a;
+  border-radius: 12px;
+  width: 500px;
+  max-width: 90%;
+  max-height: 80vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 模板对话框头部 */
+.template-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #333;
+}
+
+.template-modal-header h3 {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* 关闭对话框按钮 */
+.close-modal-btn {
+  background-color: transparent;
+  color: #888;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.close-modal-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+/* 模板对话框身体 */
+.template-modal-body {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+/* 模板列表 */
+.template-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 模板项 */
+.template-item {
+  background-color: #222;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.template-item:hover {
+  background-color: #2a2a2a;
+  border-color: #444;
+}
+
+/* 模板名称 */
+.template-name {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* 模板字段数量 */
+.template-field-count {
+  color: #888;
+  font-size: 14px;
+}
+
+/* 无模板消息 */
+.no-templates-message {
+  color: #888;
+  text-align: center;
+  padding: 40px 0;
+  font-size: 16px;
+}
+
+/* 模板对话框底部 */
+.template-modal-footer {
+  padding: 20px 24px;
+  border-top: 1px solid #333;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* 模板对话框中的取消按钮 */
+.template-modal-footer .cancel-btn {
+  padding: 10px 24px;
+  font-size: 14px;
 }

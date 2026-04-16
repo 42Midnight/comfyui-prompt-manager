@@ -31,6 +31,21 @@ contextBridge.exposeInMainWorld('electronAPI', {
   readWorkDetail: (fileName) => {
     console.log('调用 readWorkDetail:', fileName);
     return ipcRenderer.invoke('read-work-detail', fileName);
+  },
+  // 创建文件夹
+  createFolder: (folderName) => {
+    console.log('调用 createFolder:', folderName);
+    return ipcRenderer.invoke('create-folder', folderName);
+  },
+  // 加载模板数据
+  loadTemplates: () => {
+    console.log('调用 loadTemplates');
+    return ipcRenderer.invoke('load-templates');
+  },
+  // 保存模板数据
+  saveTemplates: (templates) => {
+    console.log('调用 saveTemplates:', templates.length);
+    return ipcRenderer.invoke('save-templates', templates);
   }
 });
 
